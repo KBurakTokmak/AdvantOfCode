@@ -37,15 +37,33 @@ int main() {
             std::string str = std::to_string(i);
             long long lenght = str.length();
             // std:: cout << "len is: " << lenght << std::endl;
-            if (str.length() % 2 == 0){
-                std::string part1 = str.substr(0,lenght/2);
-                std::string part2 = str.substr((lenght/2),lenght-1);
-                // std::cout << "part1 :" << part1 << " part2: " << part2 << std::endl;
-                if (part1==part2){
-                    sum+= std::stoll(str);
-                    std::cout << "Adding " << str << " to sum" << std::endl;
+            long long part_cursor = lenght/2;
+            while(part_cursor>0){
+                if(lenght % part_cursor != 0){
+                    // std::cout << "part cursor: " << part_cursor << " is not a divider for "<< length << std::endl;
+                    part_cursor--;
+                    continue;
                 }
+                // std::cout << "Checking for part cursor: " << part_cursor << std::endl;
+                bool is_repeated = true;
+                std::string part = str.substr(0, part_cursor);
+                for (long long j=part_cursor; j<lenght; j+=part_cursor){
+                    std::string next_part = str.substr(j, part_cursor);
+                    if(part != next_part){
+                        is_repeated = false;
+                        break;
+                    }
+                }
+
+                if(is_repeated){
+                    std::cout << "Adding " << str << " to sum" << std::endl;
+                    sum += std::stoll(str);
+                    break;
+                }
+                part_cursor--;
+                
             }
+               
         }
     }
     std::cout << "Sum is: "<< sum << std::endl;
