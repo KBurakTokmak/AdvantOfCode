@@ -31,8 +31,6 @@ int main() {
       bool numeric_exists = true;
       std::vector<long long> column_values;
       while (numeric_exists) {
-        // checking if numeric exists in this column
-        // First, check bounds for all lines
         bool out_of_bounds = false;
         for (int i = 0; i < 4; ++i) {
           if (lineIndex >= lines[i].size()) {
@@ -58,15 +56,26 @@ int main() {
           break;
         }
 
-        long long current_value = 0;
+        // count column digits
+        int digit_count = 0;
         for (int i = 0; i < 4; ++i) {
-          int current_num = 0;
+          if (std::isdigit(lines[i][lineIndex])) {
+            digit_count++;
+          }
+        }
+
+        // build number
+        long long current_value = 0;
+        int digit_index = 0;
+        for (int i = 0; i < 4; ++i) {
           char c = lines[i][lineIndex];
           if (std::isdigit(c)) {
-            current_num = c - '0';
+            int current_num = c - '0';
+            current_value +=
+                current_num * std::pow(10, digit_count - 1 - digit_index);
+            digit_index++;
           }
-          // else current_num stays 0 (for spaces or other chars)
-          current_value += current_num * std::pow(10, 3 - i);
+          
         }
         std::cout << "Adding current value: " << current_value
                   << " to the column values" << std::endl;
@@ -84,7 +93,7 @@ int main() {
       std::cout << "Adding column result: " << column_result
                 << " to total result" << std::endl;
       result += column_result;
-      continue; // Don't double-increment lineIndex
+      continue; // index increased inside the loop
     }
     lineIndex += 1;
   }
